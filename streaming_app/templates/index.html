@@ -21,14 +21,14 @@
 
 {% for movie in movies %}
     <div>
-        <h2>{{ movie.Title }}</h2>
-        <p>Year: {{ movie.Year }}</p>
-        <p>Type: {{ movie.Type }}</p>
-        <img src="{{ movie.Poster }}" alt="{{ movie.Title }}">
+        <h2>{{ movie.title }}</h2>
+        <p>Year: {{ movie.year }}</p>
+        <p>Type: {{ movie.type }}</p>
+        <img src="{{ movie.poster }}" alt="{{ movie.title }}">
     </div>
 {% empty %}
-    <p>No movies found.</p>
 {% endfor %}
+    <p>No movies found.</p>
 <form action="{% url 'streaming_app:add_movie' %}" method="get">
     <label>
         <input type="text" name="search_query" placeholder="Search for a movie..." required>
