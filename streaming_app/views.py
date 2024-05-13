@@ -27,7 +27,9 @@ class AddMovieView(ListView):
 
     def get_queryset(self):
         api_key = get_api_key()
-        search_query = 'Harry'
+        search_query = self.request.GET.get('search_query')
+        if not search_query:
+            raise ValueError("A search query is required.")
         url = f'https://www.omdbapi.com/?apikey={api_key}&s={search_query}'
         response = requests.get(url)
         data = response.json()

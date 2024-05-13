@@ -29,6 +29,11 @@
 {% empty %}
     <p>No movies found.</p>
 {% endfor %}
-<a href="{% url 'streaming_app:add_movie' %}" class="add-movie-button">+</a>
+<form action="{% url 'streaming_app:add_movie' %}" method="get">
+    <label>
+        <input type="text" name="search_query" placeholder="Search for a movie..." required>
+    </label>
+    <button type="submit" class="add-movie-button">+</button>
+</form>
 </body>
 </html>
