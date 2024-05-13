@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Movie</title>
+</head>
+<body>
+<h1>Add Movie</h1>
+
+{% for movie in movies %}
+    <div>
+        <h2>{{ movie.Title }}</h2>
+        <p>Year: {{ movie.Year }}</p>
+        <p>Type: {{ movie.Type }}</p>
+        <img src="{{ movie.Poster }}" alt="{{ movie.Title }}">
+    </div>
+{% empty %}
+    <p>No movies found.</p>
+{% endfor %}
+
+</body>
+</html>
