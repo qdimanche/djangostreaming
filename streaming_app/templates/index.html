@@ -45,11 +45,10 @@
                                 <h5 class="card-subtitle text-info">{{ movie.year }}</h5>
                                 <div>
                                     {% for genre in movie.genres.all %}
-                                        <h5 class="card-subtitle">{{ genre.name }}</h5>
+                                        <h5 class="card-subtitle">{{ genre.name }}{% if not forloop.last %}, {% endif %}</h5>
                                     {% endfor %}
                                 </div>
                             </div>
-                            <p class="card-text">{{ mov }}</p>
                         </div>
                     </div>
                 </div>
