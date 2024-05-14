@@ -1,7 +1,7 @@
 import requests
 import os
 
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from streaming_app.models import Movie, Genre
 
@@ -76,3 +76,8 @@ class MovieListView(ListView):
             for movie in movies:
                 movie.source = "database"
             return list(movies)
+
+class MovieDetailView(DetailView):
+    model = Movie
+    template_name = 'movie_detail.html'
+    context_object_name = 'movie'
