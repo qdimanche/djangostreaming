@@ -42,10 +42,15 @@ def fetch_movies_from_api(api_key, search_query):
                 detail_response = requests.get(detail_url)
                 detail_data = detail_response.json()
 
+                movie.plot = detail_data.get('Plot', '')
+                movie.director = detail_data.get('Director', '')
+                movie.metascore = detail_data.get('Metascore', '')
+
                 genres = detail_data.get('Genre', '').split(', ')
                 for genre_name in genres:
                     genre, _ = Genre.objects.get_or_create(name=genre_name.strip())
                     movie.genres.add(genre)
+
                 movie.save()
                 movie.source = "api"
                 print(f"Movie {movie.title} has been created.")
