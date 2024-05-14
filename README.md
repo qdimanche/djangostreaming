@@ -16,3 +16,19 @@ Ensure that Python and pip are installed on your system. You can then install Dj
 ```bash
 pip install django==3.2
 pip install requests==2.26.0
+```
+
+## Modifying the Models
+
+When you need to modify your models (located in `streaming_app/models.py`), follow these steps to ensure your database schema is updated accordingly:
+
+1. Make your changes to the model. For example, adding a new field or changing an existing one.
+2. Run `python manage.py makemigrations` to create a migration file for these changes.
+3. Apply the migration to your database by running `python manage.py migrate`.
+
+## Flushing the Database
+
+If you need to reset your database, removing all data without affecting the schema, you can flush the database. This action will remove all data from your tables but keep the tables themselves:
+
+1. Run `python manage.py flush`.
+2. Confirm the action when prompted. This will delete all data from your database.
