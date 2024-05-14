@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .add-movie-button {
+            display: inline-block;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        .movie-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .movie-card {
+            border: 3px solid #000;
+            height: 600px;
+            margin: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            flex: 0 0 calc(33.33% - 40px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .movie-card img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+<h1>Streaming Library</h1>
+<form action="{% url 'streaming_app:add_movie' %}" method="get">
+    <label>
+        <input id="search-query" type="text" name="search_query" placeholder="Search for a movie..." required>
+    </label>
+    <button type="submit" class="add-movie-button">+</button>
+</form>
+<div class="movie-container">
+    {% for movie in movies %}
+        <div class="movie-card">
+            <h2>{{ movie.title }}</h2>
+            <p>Year: {{ movie.year }}</p>
+            <p>Type: {{ movie.type }}</p>
+            <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+        </div>
+    {% empty %}
+        <p>No movies found.</p>
+    {% endfor %}
+</div>
+<script>
+    const searchInput = document.getElementById('search-query');
+    const movieCards = Array.from(document.getElementsByClassName('movie-card'));
+
+    searchInput.addEventListener('keyup', function () {
+        const query = this.value.toLowerCase();
+
+        movieCards.forEach(card => {
+            const title = card.getElementsByTagName('h2')[0].innerText.toLowerCase();
+            if (title.includes(query)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+</script>
+</body>
+</html>
