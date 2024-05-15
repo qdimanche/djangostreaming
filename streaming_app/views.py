@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from .models import Movie
-from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotAllowed, JsonResponse
 from .services.movie_service import get_local_movies, fetch_movies_from_api
 from .utils.api_key_utils import get_api_key
 
@@ -36,8 +36,7 @@ class MovieListView(ListView):
                 movie.source = "database"
             return local_movies
 
-        api_key = get_api_key()
-        return fetch_movies_from_api(api_key, search_query)
+        return fetch_movies_from_api(search_query)
 
 
 class MovieDetailView(DetailView):

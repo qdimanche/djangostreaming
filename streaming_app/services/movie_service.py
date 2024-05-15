@@ -1,14 +1,39 @@
 import requests
-import unicodedata
-from streaming_app.models import Movie, Genre
+
+from streaming_app.models import Movie
+from streaming_app.services.genre_service import create_genre
+from streaming_app.utils.api_key_utils import get_api_key
+from streaming_app.utils.string_treatment_functions import remove_accents
+
+api_key = get_api_key()
 
 
-def remove_accents(input_str):
-    """
-    Normalize strings to remove accents and perform a case-insensitive comparison.
-    """
-    nfkd_form = unicodedata.normalize('NFKD', input_str)
-    return "".join([c for c in nfkd_form if not unicodedata.combining(c)])
+def create_movie(movie):
+    try:
+        movie_created, created = Movie.objects.get_or_create(
+            omdb_id=movie.get('imdbID'),
+            defaults={
+                'title': movie.get('Title', ''),
+                'year': movie.get('Year', ''),
+                'poster': movie.get('Poster',
+                                    'https://downtownwinnipegbiz.com/wp-content/uploads/2020/02/placeholder-image.jpg'),
+                'plot': movie.get('Plot', ''),
+                'director': movie.get('Director', ''),
+                'metascore': movie.get('Metascore', ''),
+            }
+        )
+
+        movie_created.source = 'api'
+        movie_created.save()
+        return movie_created
+    except Movie.DoesNotExist:
+        return None
+
+
+def get_api_movie_details(movie_id):
+    url = f'https://www.omdbapi.com/?apikey={api_key}&i={movie_id}'
+    response = requests.get(url)
+    return response.json()
 
 
 def get_local_movies(search_query):
@@ -21,7 +46,7 @@ def get_local_movies(search_query):
     return filtered_movies
 
 
-def fetch_movies_from_api(api_key, search_query):
+def fetch_movies_from_api(search_query):
     """
     Fetch movies from the OMDB API and create them in the database.
     """
@@ -31,37 +56,21 @@ def fetch_movies_from_api(api_key, search_query):
     data = response.json()
 
     if 'Response' not in data or data['Response'] != 'True':
-        return print("Error while fetching movies")
+        print("Error while fetching movies")
+        return []
 
     for item in data.get('Search', []):
-        movie, created = Movie.objects.get_or_create(
-            omdb_id=item.get('imdbID'),
-            defaults={
-                'title': item.get('Title', ''),
-                'year': item.get('Year', ''),
-                'poster': item.get('Poster',
-                                   'https://downtownwinnipegbiz.com/wp-content/uploads/2020/02'
-                                   '/placeholder-image.jpg'),
-                'plot': item.get('Plot', ''),
-                'director': item.get('Director', ''),
-                'metascore': item.get('Metascore', ''),
-            }
-        )
+        movie_created = create_movie(item)
 
-        if not created:
-            return print('Error while adding movie')
+        if movie_created is None:
+            return
 
-        movie.source = 'api'
-        movie.save()
+        movie_api_details = get_api_movie_details(item.get("imdbID", ""))
 
-        genres = item.get('Genre', '').split(', ')
+        genres = movie_api_details.get('Genre', '').split(', ')
         for genre_name in genres:
-            genre, created = Genre.objects.get_or_create(name=genre_name.strip())
+            genre = create_genre(genre_name)
+            movie_created.genres.add(genre)
 
-            if not created:
-                print('Error while adding genres')
-
-            movie.genres.add(genre)
-
-        movies_list.append(movie)
+        movies_list.append(movie_created)
     return movies_list
