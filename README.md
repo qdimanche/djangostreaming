@@ -1,6 +1,6 @@
 # Streaming Library App
 
-The Streaming Library App is a web application designed to manage a digital movie library. It enables users to seamlessly integrate movie data from the OMDB API, offering functionalities to add new movies, delete existing ones (not currently available), and browse the movie collection. Developed with Python and the Django framework.
+> The Streaming Library App is a web application designed to manage a digital movie library. It enables users to seamlessly integrate movie data from the OMDB API, offering functionalities to add new movies, delete existing ones, and browse the movie collection. Developed with Python and the Django framework.
 
 ## Requirements
 

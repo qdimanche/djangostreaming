@@ -2,8 +2,19 @@ import requests
 import os
 
 from django.views.generic import ListView, DetailView
-
 from streaming_app.models import Movie, Genre
+from django.shortcuts import redirect
+from .models import Movie
+from django.http import HttpResponseNotAllowed
+
+
+def delete_movie(request, movie_id):
+    if request.method == 'POST':
+        movie = Movie.objects.get(id=movie_id)
+        movie.delete()
+        return redirect('streaming_app:index')
+    else:
+        return HttpResponseNotAllowed(['POST'])
 
 
 def get_api_key():
@@ -81,6 +92,7 @@ class MovieListView(ListView):
             for movie in movies:
                 movie.source = "database"
             return list(movies)
+
 
 class MovieDetailView(DetailView):
     model = Movie

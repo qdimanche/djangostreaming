@@ -4,17 +4,32 @@
     <meta charset="UTF-8">
     <title>{{ movie.title }}</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <a href="{% url 'streaming_app:index' %}" class="home-icon btn btn-light position-absolute text-dark" style="top: 40px; left: 20px; font-size: 24px; text-decoration: none;">
-        <span class="material-icons">home</span>
-    </a>
-    <h1>{{ movie.title }}</h1>
-    <p>Year: {{ movie.year }}</p>
-    <p>Genres: {% for genre in movie.genres.all %}{{ genre.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-    <p>Director: {{ movie.director }}</p>
-    <p>Plot: {{ movie.plot }}</p>
-    <p>Metascore: {{ movie.metascore }}</p>
-    <img src="{{ movie.poster }}" alt="Poster for {{ movie.title }}">
+<div class="container">
+    <div class="row">
+        <div class="col-12 text-center">
+            <a href="{% url 'streaming_app:index' %}" class="home-icon btn btn-light text-dark"
+               style="font-size: 24px; text-decoration: none;">
+                <span class="material-icons">home</span>
+            </a>
+            <h1>{{ movie.title }}</h1>
+            <img src="{{ movie.poster }}" alt="Poster for {{ movie.title }}" class="img-fluid">
+            <p>Year: {{ movie.year }}</p>
+            <p>Genres: {% for genre in movie.genres.all %}{{ genre.name }}{% if not forloop.last %},
+            {% endif %}{% endfor %}</p>
+            <p>Director: {{ movie.director }}</p>
+            <p>Plot: {{ movie.plot }}</p>
+            <p>Metascore: {{ movie.metascore }}</p>
+            <form action="{% url 'streaming_app:delete_movie' movie.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <span class="material-icons">delete</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>
