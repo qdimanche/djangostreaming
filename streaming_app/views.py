@@ -1,9 +1,8 @@
 from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from .models import Movie
-from django.http import HttpResponseNotAllowed, JsonResponse
+from django.http import HttpResponseNotAllowed
 from .services.movie_service import get_local_movies, fetch_movies_from_api
-from .utils.api_key_utils import get_api_key
 
 
 class DeleteMovieView(View):
