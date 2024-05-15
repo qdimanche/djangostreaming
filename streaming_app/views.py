@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 from django.shortcuts import redirect
 from .models import Movie
 from django.http import HttpResponseNotAllowed
@@ -6,16 +6,16 @@ from .services.movie_service import get_local_movies, fetch_movies_from_api
 from .utils.api_key_utils import get_api_key
 
 
-def delete_movie(request, movie_id):
-    if request.method == 'POST':
+class DeleteMovieView(View):
+    http_method_names = ['post']
+
+    def post(self, request, movie_id):
         try:
             movie = Movie.objects.get(id=movie_id)
             movie.delete()
         except Movie.DoesNotExist:
             return HttpResponseNotAllowed(['POST'])
         return redirect('streaming_app:index')
-    else:
-        return HttpResponseNotAllowed(['POST'])
 
 
 class MovieListView(ListView):
