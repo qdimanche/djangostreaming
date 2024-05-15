@@ -31,7 +31,7 @@ class MovieListView(ListView):
             return movies
 
         local_movies = get_local_movies(search_query)
-        if local_movies.exists():
+        if local_movies:
             for movie in local_movies:
                 movie.source = "database"
             return local_movies
