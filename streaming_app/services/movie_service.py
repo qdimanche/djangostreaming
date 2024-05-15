@@ -1,13 +1,30 @@
 import requests
-
+import unicodedata
 from streaming_app.models import Movie, Genre
 
 
+def remove_accents(input_str):
+    """
+    Normalize strings to remove accents and perform a case-insensitive comparison.
+    """
+    nfkd_form = unicodedata.normalize('NFKD', input_str)
+    return "".join([c for c in nfkd_form if not unicodedata.combining(c)])
+
+
 def get_local_movies(search_query):
-    return Movie.objects.filter(title__icontains=search_query)
+    """
+    Perform a case-insensitive and accent-insensitive search for movies.
+    """
+    normalized_query = remove_accents(search_query.lower())
+    movies = Movie.objects.all()
+    filtered_movies = [movie for movie in movies if remove_accents(movie.title.lower()).find(normalized_query) != -1]
+    return filtered_movies
 
 
 def fetch_movies_from_api(api_key, search_query):
+    """
+    Fetch movies from the OMDB API and create them in the database.
+    """
     url = f'https://www.omdbapi.com/?apikey={api_key}&s={search_query}&type=movie'
     response = requests.get(url)
     data = response.json()
