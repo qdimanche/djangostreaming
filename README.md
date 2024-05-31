@@ -8,7 +8,7 @@ To run the Streaming Library App, you will need the following:
 
 - Python 3.8 or higher
 - Django 3.2 or higher
-- requests library (version 2.26.0 or higher)
+- Requests 2.26.0 or higher
 - An OMDB API key (register for a free key at http://www.omdbapi.com/ and copy it to a file named `API_KEY` in the root directory of the project)
 
 Ensure that Python and pip are installed on your system. You can then install Django and requests using pip:
@@ -16,6 +16,11 @@ Ensure that Python and pip are installed on your system. You can then install Dj
 ```bash
 pip install django==3.2
 pip install requests==2.26.0
+```
+
+## Run app
+```bash
+python manage.py runserver
 ```
 
 ## Modifying the Models
